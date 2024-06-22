@@ -1,0 +1,6 @@
+/dist
+/node_modules
+/build
+yarn.lock
+Dockerfile
+README.md

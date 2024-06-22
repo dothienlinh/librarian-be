@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    container_name: library-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: library
+      MYSQL_USER: library
+      MYSQL_PASSWORD: password
+    ports:
+      - 33061:3306
+    networks:
+      - librarian
+    volumes:
+      - db-data:/var/lib/mysql
+    expose:
+      - 3306
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: library-be
+    user: "${UID}:${GID}"
+    restart: always
+    environment:
+      - LOCAL_PORT=8000
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=library
+      - MYSQL_USER=library
+      - MYSQL_PASSWORD=password
+    ports:
+      - "8000:8000"
+    networks:
+      - librarian
+    volumes:
+      - ./:/app/backend
+      - /app/backend/node_modules
+    depends_on:
+      - db
+    expose:
+      - 8000
+
+networks:
+  librarian:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
