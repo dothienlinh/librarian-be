@@ -1,6 +1,6 @@
 import { Admin } from 'src/admins/entities/admin.entity';
 import { BaseEntity } from 'src/common/bases/base.entity';
-import { RoleName } from 'src/enums/rolse';
+import { RoleName } from 'src/common/enums/rolse';
 import { Check, Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('roles')

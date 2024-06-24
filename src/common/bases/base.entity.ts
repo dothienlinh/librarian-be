@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 export abstract class BaseEntity extends BaseEntityTypeOrm {
-  @PrimaryGeneratedColumn('increment', { type: 'int' })
+  @PrimaryGeneratedColumn()
   public id: number;
 
   @Exclude()
