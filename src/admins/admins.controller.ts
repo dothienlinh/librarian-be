@@ -6,12 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ResponseMessage } from 'src/decorators/responseMessage.decorator';
+import { ResponseMessage } from 'src/common/decorators/responseMessage.decorator';
 
 @ApiTags('Admin')
 @Controller('admins')
@@ -43,7 +44,7 @@ export class AdminsController {
     return this.adminsService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ResponseMessage('Update an admin successfully')
   @ApiOperation({ summary: 'Update admin by id' })
   update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {

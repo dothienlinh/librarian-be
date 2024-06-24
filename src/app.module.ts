@@ -6,6 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthorsModule } from './authors/authors.module';
 import { AdminsModule } from './admins/admins.module';
 import { RolesModule } from './roles/roles.module';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { TransformInterceptor } from './common/interceptors/response.interceptor';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -31,8 +35,19 @@ import { RolesModule } from './roles/roles.module';
     AuthorsModule,
     AdminsModule,
     RolesModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

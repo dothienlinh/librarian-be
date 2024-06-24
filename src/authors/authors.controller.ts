@@ -12,7 +12,7 @@ import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ResponseMessage } from 'src/decorators/responseMessage.decorator';
+import { ResponseMessage } from 'src/common/decorators/responseMessage.decorator';
 
 @ApiTags('Author')
 @Controller('authors')

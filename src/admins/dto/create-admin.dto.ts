@@ -1,16 +1,10 @@
-import {
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-} from 'class-validator';
-import { RoleId } from 'src/enums/rolse';
+import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { RoleId } from 'src/common/enums/rolse';
 
 export class CreateAdminDto {
   @IsString()
   @IsNotEmpty()
-  username: string;
+  name: string;
 
   @IsString()
   @IsNotEmpty()
@@ -21,6 +15,7 @@ export class CreateAdminDto {
   email: string;
 
   @IsEnum(RoleId)
-  @IsNumber()
+  @IsInt()
+  @IsNotEmpty()
   roleId: RoleId;
 }

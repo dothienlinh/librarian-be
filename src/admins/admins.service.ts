@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Admin } from './entities/admin.entity';
 import { IsNull, Not, Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
+import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 
 @Injectable()
 export class AdminsService {
@@ -14,25 +15,41 @@ export class AdminsService {
   ) {}
 
   async create(createAdminDto: CreateAdminDto) {
-    const admin = await this.adminRepository.save(createAdminDto);
+    const { password, ...rest } = createAdminDto;
+    const hashPassword = await this.hashPassword(password);
 
-    return plainToInstance(Admin, admin);
+    const admin = this.adminRepository.create({
+      password: hashPassword,
+      ...rest,
+    });
+
+    return plainToInstance(Admin, await this.adminRepository.save(admin));
   }
 
   async findAll() {
     const admins = await this.adminRepository
       .createQueryBuilder('admin')
-      .innerJoinAndSelect('admin.role', 'role')
+      .leftJoinAndSelect('admin.role', 'role')
       .getMany();
 
     return plainToInstance(Admin, admins);
   }
 
-  findOne(id: number) {
-    const admin = this.adminRepository.findOneBy({ id });
+  async findOne(id: number) {
+    const admin = await this.adminRepository.findOneBy({ id });
 
     return plainToInstance(Admin, admin);
   }
+
+  findByEmail = async (email: string) => {
+    const admin = await this.adminRepository
+      .createQueryBuilder('admin')
+      .leftJoinAndSelect('admin.role', 'role')
+      .where('admin.email LIKE :email', { email })
+      .getOne();
+
+    return admin;
+  };
 
   async update(id: number, updateAdminDto: UpdateAdminDto) {
     return await this.adminRepository.update({ id }, updateAdminDto);
@@ -51,5 +68,15 @@ export class AdminsService {
 
   restore = async (id: number) => {
     return await this.adminRepository.restore(id);
+  };
+
+  hashPassword = async (password: string): Promise<string> => {
+    const salt = await genSaltSync();
+
+    return await hashSync(password, salt);
+  };
+
+  verifyHashPassword = async (password: string, hashedPassword: string) => {
+    return await compareSync(password, hashedPassword);
   };
 }
