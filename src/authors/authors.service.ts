@@ -19,11 +19,15 @@ export class AuthorsService {
   }
 
   async findAll() {
-    return await this.authorRepository.find();
+    const authors = await this.authorRepository.find();
+
+    return plainToInstance(Author, authors);
   }
 
   async findOne(id: number) {
-    return await this.authorRepository.findOneBy({ id });
+    const author = await this.authorRepository.findOneBy({ id });
+
+    return plainToInstance(Author, author);
   }
 
   async update(id: number, updateAuthorDto: UpdateAuthorDto) {

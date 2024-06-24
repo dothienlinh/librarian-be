@@ -4,3 +4,7 @@
 yarn.lock
 Dockerfile
 README.md
+.git
+.gitignore
+docker-compose.yml
+.env

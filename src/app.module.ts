@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthorsModule } from './authors/authors.module';
+import { AdminsModule } from './admins/admins.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -18,12 +20,17 @@ import { AuthorsModule } from './authors/authors.module';
         password: configService.get('MYSQL_PASSWORD'),
         database: configService.get('MYSQL_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
+        synchronize:
+          configService.get<string>('NODE_ENV') === 'development'
+            ? true
+            : false,
         autoLoadEntities: true,
       }),
       inject: [ConfigService],
     }),
     AuthorsModule,
+    AdminsModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
