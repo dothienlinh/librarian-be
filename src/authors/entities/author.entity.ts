@@ -1,5 +1,6 @@
+import { Book } from 'src/books/entities/book.entity';
 import { BaseEntity } from 'src/common/bases/base.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 
 @Entity('authors')
 export class Author extends BaseEntity {
@@ -8,4 +9,8 @@ export class Author extends BaseEntity {
 
   @Column({ type: 'date' })
   birthdate: Date;
+
+  @ManyToMany(() => Book, { cascade: true })
+  @JoinTable()
+  books: Book[];
 }

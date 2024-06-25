@@ -11,6 +11,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformInterceptor } from './common/interceptors/response.interceptor';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { BooksModule } from './books/books.module';
+import { MembersModule } from './members/members.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { BooksModule } from './books/books.module';
     RolesModule,
     AuthModule,
     BooksModule,
+    MembersModule,
   ],
   controllers: [AppController],
   providers: [
