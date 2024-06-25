@@ -11,6 +11,7 @@ export class BooksService {
     @InjectRepository(Book)
     private readonly bookRepository: Repository<Book>,
   ) {}
+
   async create(createBookDto: CreateBookDto) {
     const book = this.bookRepository.create(createBookDto);
 

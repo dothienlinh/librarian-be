@@ -18,11 +18,13 @@ import { ResponseMessage } from 'src/common/decorators/responseMessage.decorator
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
+
   @Get('/trash')
   @ApiOperation({ summary: 'Get trash books' })
   getTrash() {
     return this.booksService.getTrash();
   }
+
   @Post()
   @ApiOperation({ summary: 'Create a new book' })
   @ResponseMessage('Create a new book successfully!')
