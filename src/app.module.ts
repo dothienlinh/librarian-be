@@ -12,6 +12,7 @@ import { TransformInterceptor } from './common/interceptors/response.interceptor
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { BooksModule } from './books/books.module';
 import { MembersModule } from './members/members.module';
+import { BorrowingModule } from './borrowing/borrowing.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { MembersModule } from './members/members.module';
     AuthModule,
     BooksModule,
     MembersModule,
+    BorrowingModule,
   ],
   controllers: [AppController],
   providers: [
