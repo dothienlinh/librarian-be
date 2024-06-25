@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformInterceptor } from './common/interceptors/response.interceptor';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { BooksModule } from './books/books.module';
 
 @Module({
   imports: [
@@ -24,10 +25,7 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
         password: configService.get('MYSQL_PASSWORD'),
         database: configService.get('MYSQL_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize:
-          configService.get<string>('NODE_ENV') === 'development'
-            ? true
-            : false,
+        synchronize: configService.get<string>('MYSQL_SYNCHRONIZE') === 'true',
         autoLoadEntities: true,
       }),
       inject: [ConfigService],
@@ -36,6 +34,7 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
     AdminsModule,
     RolesModule,
     AuthModule,
+    BooksModule,
   ],
   controllers: [AppController],
   providers: [
