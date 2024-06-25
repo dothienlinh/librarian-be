@@ -13,8 +13,10 @@ import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResponseMessage } from 'src/common/decorators/responseMessage.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @ApiTags('Admin')
+@Roles()
 @Controller('admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
