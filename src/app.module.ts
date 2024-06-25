@@ -14,6 +14,7 @@ import { BooksModule } from './books/books.module';
 import { MembersModule } from './members/members.module';
 import { BorrowingModule } from './borrowing/borrowing.module';
 import { CategoriesModule } from './categories/categories.module';
+import { RolesGuard } from './common/guards/roles.guard';
 
 @Module({
   imports: [
@@ -52,6 +53,10 @@ import { CategoriesModule } from './categories/categories.module';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })
