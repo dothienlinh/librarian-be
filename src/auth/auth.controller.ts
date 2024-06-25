@@ -5,6 +5,7 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 import { LocalAuthGuard } from 'src/common/guards/local-auth.guard';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { Public } from 'src/common/decorators/isPublic';
+import { ResponseMessage } from 'src/common/decorators/responseMessage.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -16,6 +17,7 @@ export class AuthController {
   @ApiBody({ type: LoginAuthDto })
   @Public()
   @ApiOperation({ summary: 'Login' })
+  @ResponseMessage('Login successful!')
   async login(@Req() req) {
     return this.authService.login(req.user);
   }

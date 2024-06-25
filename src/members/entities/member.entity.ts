@@ -1,5 +1,6 @@
+import { Borrowing } from 'src/borrowing/entities/borrowing.entity';
 import { BaseEntity } from 'src/common/bases/base.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('members')
 export class Member extends BaseEntity {
@@ -20,4 +21,7 @@ export class Member extends BaseEntity {
 
   @Column({ type: 'date' })
   membershipDate: Date;
+
+  @OneToMany(() => Borrowing, (borrowing) => borrowing.member)
+  borrowings: Borrowing[];
 }
