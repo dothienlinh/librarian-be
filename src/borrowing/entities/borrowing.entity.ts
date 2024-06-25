@@ -1,6 +1,7 @@
 import { Book } from 'src/books/entities/book.entity';
 import { BaseEntity } from 'src/common/bases/base.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Member } from 'src/members/entities/member.entity';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('borrowing')
 export class Borrowing extends BaseEntity {
@@ -15,6 +16,9 @@ export class Borrowing extends BaseEntity {
 
   @Column({ type: 'date', name: 'return_date' })
   returnDate: Date;
+
+  @ManyToOne(() => Member, (member) => member.borrowings)
+  member: Member;
 
   @OneToMany(() => Book, (book) => book.borrowing)
   books: Book[];

@@ -13,6 +13,7 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { BooksModule } from './books/books.module';
 import { MembersModule } from './members/members.module';
 import { BorrowingModule } from './borrowing/borrowing.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { BorrowingModule } from './borrowing/borrowing.module';
     BooksModule,
     MembersModule,
     BorrowingModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [

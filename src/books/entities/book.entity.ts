@@ -1,5 +1,6 @@
 import { Author } from 'src/authors/entities/author.entity';
 import { Borrowing } from 'src/borrowing/entities/borrowing.entity';
+import { Category } from 'src/categories/entities/category.entity';
 import { BaseEntity } from 'src/common/bases/base.entity';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 
@@ -26,4 +27,8 @@ export class Book extends BaseEntity {
 
   @ManyToOne(() => Borrowing, (borrowing) => borrowing.books)
   borrowing: Borrowing;
+
+  @ManyToMany(() => Category, { cascade: true })
+  @JoinTable()
+  categories: Category[];
 }
