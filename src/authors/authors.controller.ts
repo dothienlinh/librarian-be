@@ -53,7 +53,7 @@ export class AuthorsController {
 
   @Patch('/restore/:id')
   @ApiOperation({ summary: 'Restore author by id' })
-  @ResponseMessage('Restore an authors successfully!')
+  @ResponseMessage('Restore an author successfully!')
   restore(@Param('id') id: number) {
     return this.authorsService.restore(+id);
   }

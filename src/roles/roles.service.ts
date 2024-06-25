@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
 import { plainToInstance } from 'class-transformer';
 
@@ -14,9 +14,9 @@ export class RolesService {
   ) {}
 
   async create(createRoleDto: CreateRoleDto) {
-    const role = await this.roleRepository.save(createRoleDto);
+    const role = this.roleRepository.create(createRoleDto);
 
-    return plainToInstance(Role, role);
+    return plainToInstance(Role, await this.roleRepository.save(role));
   }
 
   async findAll() {
@@ -38,4 +38,15 @@ export class RolesService {
   async remove(id: number) {
     return await this.roleRepository.softDelete(id);
   }
+
+  getTrash = async () => {
+    return await this.roleRepository.find({
+      withDeleted: true,
+      where: { deletedAt: Not(IsNull()) },
+    });
+  };
+
+  restore = async (id: number) => {
+    return await this.roleRepository.restore(id);
+  };
 }
