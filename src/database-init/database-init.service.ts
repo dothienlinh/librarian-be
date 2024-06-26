@@ -41,6 +41,7 @@ export class DatabaseInitService implements OnModuleInit {
         name: 'super admin',
         password: password,
         roleId: RoleId.SUPER_ADMIN,
+        confirmPassword: password,
       };
       return await this.adminsService.create(createAdminDto);
     }

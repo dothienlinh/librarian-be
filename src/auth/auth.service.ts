@@ -32,7 +32,7 @@ export class AuthService {
     throw new BadRequestException('Email or password is incorrect');
   }
 
-  async login(admin: IAdmin, response: Response) {
+  async login(admin: IAdmin, res: Response) {
     const payload: IPayload = {
       email: admin.email,
       name: admin.name,
@@ -42,7 +42,7 @@ export class AuthService {
 
     const refreshToken = await this.createRefreshToken(payload);
 
-    response.cookie('refreshToken', refreshToken, {
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRES')),
     });
@@ -93,5 +93,11 @@ export class AuthService {
       secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
       expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRES'),
     });
+  };
+
+  logout = async (id: number, res: Response) => {
+    res.clearCookie('refreshToken');
+
+    return await this.adminsService.updateRefreshToken(null, id);
   };
 }

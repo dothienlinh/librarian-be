@@ -16,7 +16,15 @@ export class AdminsService {
   ) {}
 
   async create(createAdminDto: CreateAdminDto) {
+    delete createAdminDto.confirmPassword;
+
     const { password, ...rest } = createAdminDto;
+
+    const maxAdmin = await this.adminRepository.count();
+
+    if (maxAdmin > 5) {
+      throw new BadRequestException('You can not create more than 5 admins!');
+    }
 
     const isExist = await this.adminRepository.findOneBy({ email: rest.email });
 
