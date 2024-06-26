@@ -41,10 +41,13 @@ export class BorrowingService {
   }
 
   getTrash = async () => {
-    return await this.borrowingRepository.find({
-      withDeleted: true,
-      where: { deletedAt: Not(IsNull()) },
-    });
+    return plainToInstance(
+      Borrowing,
+      await this.borrowingRepository.find({
+        withDeleted: true,
+        where: { deletedAt: Not(IsNull()) },
+      }),
+    );
   };
 
   restore = async (id: number) => {

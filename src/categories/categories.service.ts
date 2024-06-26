@@ -41,10 +41,13 @@ export class CategoriesService {
   }
 
   getTrash = async () => {
-    return await this.categoriesRepository.find({
-      withDeleted: true,
-      where: { deletedAt: Not(IsNull()) },
-    });
+    return plainToInstance(
+      Category,
+      await this.categoriesRepository.find({
+        withDeleted: true,
+        where: { deletedAt: Not(IsNull()) },
+      }),
+    );
   };
 
   restore = async (id: number) => {

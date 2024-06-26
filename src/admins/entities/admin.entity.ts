@@ -1,9 +1,10 @@
 import { Exclude } from 'class-transformer';
 import { BaseEntity } from 'src/common/bases/base.entity';
 import { Role } from 'src/roles/entities/role.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Check, Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('admins')
+@Check(`"role_id" IN (1, 2)`)
 export class Admin extends BaseEntity {
   @Column({ type: 'varchar' })
   name: string;

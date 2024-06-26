@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +6,7 @@ import { Admin } from './entities/admin.entity';
 import { IsNull, Not, Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { genSaltSync, hashSync, compareSync } from 'bcrypt';
+import { RoleId } from 'src/common/enums/rolse';
 
 @Injectable()
 export class AdminsService {
@@ -16,6 +17,13 @@ export class AdminsService {
 
   async create(createAdminDto: CreateAdminDto) {
     const { password, ...rest } = createAdminDto;
+
+    const isExist = await this.adminRepository.findOneBy({ email: rest.email });
+
+    if (isExist) {
+      throw new BadRequestException('Admin already exists!');
+    }
+
     const hashPassword = await this.hashPassword(password);
 
     const admin = this.adminRepository.create({
@@ -60,10 +68,13 @@ export class AdminsService {
   }
 
   getTrash = async () => {
-    return await this.adminRepository.find({
-      withDeleted: true,
-      where: { deletedAt: Not(IsNull()) },
-    });
+    return plainToInstance(
+      Admin,
+      await this.adminRepository.find({
+        withDeleted: true,
+        where: { deletedAt: Not(IsNull()) },
+      }),
+    );
   };
 
   restore = async (id: number) => {
@@ -76,7 +87,18 @@ export class AdminsService {
     return await hashSync(password, salt);
   };
 
-  verifyHashPassword = async (password: string, hashedPassword: string) => {
+  verifyHashPassword = async (
+    password: string,
+    hashedPassword: string,
+  ): Promise<boolean> => {
     return await compareSync(password, hashedPassword);
+  };
+
+  isExistAdmin = async () => {
+    return await this.adminRepository.findOneBy({
+      name: 'super admin',
+      email: 'admin@gmail.com',
+      roleId: RoleId.SUPER_ADMIN,
+    });
   };
 }

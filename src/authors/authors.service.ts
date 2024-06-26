@@ -43,10 +43,13 @@ export class AuthorsService {
   }
 
   getTrash = async () => {
-    return await this.authorRepository.find({
-      withDeleted: true,
-      where: { deletedAt: Not(IsNull()) },
-    });
+    return plainToInstance(
+      Author,
+      await this.authorRepository.find({
+        withDeleted: true,
+        where: { deletedAt: Not(IsNull()) },
+      }),
+    );
   };
 
   restore = async (id: number) => {
