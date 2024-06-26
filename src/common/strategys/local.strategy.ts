@@ -2,7 +2,7 @@ import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
-import { IUser } from 'src/common/interfaces/user.interface';
+import { IAdmin } from 'src/common/interfaces/admin.interface';
 import { Admin } from 'src/admins/entities/admin.entity';
 import { plainToInstance } from 'class-transformer';
 
@@ -15,13 +15,16 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(username: string, password: string): Promise<any> {
-    const user: IUser = await this.authService.validateUser(username, password);
-    if (!user) {
+  async validate(emailAdmin: string, password: string): Promise<any> {
+    const admin: IAdmin = await this.authService.validateAdmin(
+      emailAdmin,
+      password,
+    );
+    if (!admin) {
       throw new UnauthorizedException();
     }
 
-    const { email, id, name, role } = plainToInstance(Admin, user);
+    const { email, id, name, role } = plainToInstance(Admin, admin);
 
     return {
       id,

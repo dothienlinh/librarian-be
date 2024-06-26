@@ -1,3 +1,3 @@
-import { IUser } from './user.interface';
+import { IAdmin } from './admin.interface';
 
-export interface IPayload extends IUser {}
+export interface IPayload extends IAdmin {}

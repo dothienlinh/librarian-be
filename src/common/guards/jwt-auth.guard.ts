@@ -23,8 +23,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 
-  handleRequest(err, user, info) {
-    if (err || !user) {
+  handleRequest(err, admin, info) {
+    if (err || !admin) {
       if (info) {
         switch (info.name) {
           case 'TokenExpiredError':
@@ -39,6 +39,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       }
       throw err || new UnauthorizedException();
     }
-    return user;
+    return admin;
   }
 }
