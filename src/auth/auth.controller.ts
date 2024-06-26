@@ -13,14 +13,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
+  @Public()
   @Post('login')
   @ApiBody({ type: LoginAuthDto })
-  @Public()
   @ApiOperation({ summary: 'Login' })
   @ApiBearerAuth('accessToken')
   @ResponseMessage('Login successful!')
-  async login(@Req() req, @Res({ passthrough: true }) response: Response) {
-    return this.authService.login(req.user, response);
+  async login(@Req() req, @Res({ passthrough: true }) res: Response) {
+    return this.authService.login(req.user, res);
   }
 
   @Public()
@@ -34,7 +34,13 @@ export class AuthController {
 
   @Get('account')
   @ApiOperation({ summary: 'Get current admin' })
-  getProfile(@Req() req) {
+  getProfile(@Req() req: Request) {
     return req.user;
+  }
+
+  @Post('logout')
+  logout(@Res({ passthrough: true }) res: Response, @Req() req) {
+    const { id }: { id: number } = req.user;
+    return this.authService.logout(id, res);
   }
 }
