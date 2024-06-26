@@ -15,6 +15,7 @@ import { MembersModule } from './members/members.module';
 import { BorrowingModule } from './borrowing/borrowing.module';
 import { CategoriesModule } from './categories/categories.module';
 import { RolesGuard } from './common/guards/roles.guard';
+import { DatabaseInitModule } from './database-init/database-init.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { RolesGuard } from './common/guards/roles.guard';
     MembersModule,
     BorrowingModule,
     CategoriesModule,
+    DatabaseInitModule,
   ],
   controllers: [AppController],
   providers: [

@@ -40,10 +40,13 @@ export class RolesService {
   }
 
   getTrash = async () => {
-    return await this.roleRepository.find({
-      withDeleted: true,
-      where: { deletedAt: Not(IsNull()) },
-    });
+    return plainToInstance(
+      Role,
+      await this.roleRepository.find({
+        withDeleted: true,
+        where: { deletedAt: Not(IsNull()) },
+      }),
+    );
   };
 
   restore = async (id: number) => {

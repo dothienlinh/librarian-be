@@ -1,4 +1,10 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateBookDto {
   @IsString()
@@ -20,4 +26,14 @@ export class CreateBookDto {
   @IsInt()
   @IsOptional()
   copies: number;
+
+  @IsInt({ each: true })
+  @IsNotEmpty()
+  @IsArray()
+  categories: number[];
+
+  @IsInt({ each: true })
+  @IsNotEmpty()
+  @IsArray()
+  authorId: number[];
 }

@@ -2,14 +2,21 @@ import { Author } from 'src/authors/entities/author.entity';
 import { Borrowing } from 'src/borrowing/entities/borrowing.entity';
 import { Category } from 'src/categories/entities/category.entity';
 import { BaseEntity } from 'src/common/bases/base.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+} from 'typeorm';
 
 @Entity('books')
 export class Book extends BaseEntity {
   @Column({ type: 'varchar' })
   title: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', unique: true })
   isbn: string;
 
   @Column({ type: 'varchar', nullable: true })
@@ -22,13 +29,34 @@ export class Book extends BaseEntity {
   copies: number;
 
   @ManyToMany(() => Author, { cascade: true })
-  @JoinTable()
+  @JoinTable({
+    name: 'books_authors',
+    joinColumn: {
+      name: 'book_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'author_id',
+      referencedColumnName: 'id',
+    },
+  })
   authors: Author[];
 
   @ManyToOne(() => Borrowing, (borrowing) => borrowing.books)
+  @JoinColumn({ name: 'borrowing_id' })
   borrowing: Borrowing;
 
   @ManyToMany(() => Category, { cascade: true })
-  @JoinTable()
+  @JoinTable({
+    name: 'books_categories',
+    joinColumn: {
+      name: 'book_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'category_id',
+      referencedColumnName: 'id',
+    },
+  })
   categories: Category[];
 }

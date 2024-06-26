@@ -24,7 +24,7 @@ export class AuthService {
       }
     }
 
-    throw new BadRequestException('Username or password is incorrect');
+    throw new BadRequestException('Email or password is incorrect');
   }
 
   async login(user: IUser) {

@@ -36,10 +36,13 @@ export class MembersService {
   }
 
   getTrash = async () => {
-    return await this.memberRepository.find({
-      withDeleted: true,
-      where: { deletedAt: Not(IsNull()) },
-    });
+    return plainToInstance(
+      Member,
+      await this.memberRepository.find({
+        withDeleted: true,
+        where: { deletedAt: Not(IsNull()) },
+      }),
+    );
   };
 
   restore = async (id: number) => {
