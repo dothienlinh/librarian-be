@@ -101,4 +101,12 @@ export class AdminsService {
       roleId: RoleId.SUPER_ADMIN,
     });
   };
+
+  updateRefreshToken = async (refreshToken: string, id: number) => {
+    return await this.adminRepository.update({ id }, { refreshToken });
+  };
+
+  findByRefreshToken = async (refreshToken: string) => {
+    return this.adminRepository.findOneBy({ refreshToken });
+  };
 }

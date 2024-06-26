@@ -17,6 +17,10 @@ export class Admin extends BaseEntity {
   email: string;
 
   @Exclude()
+  @Column({ type: 'text', nullable: true })
+  refreshToken: string;
+
+  @Exclude()
   @Column({ name: 'role_id', type: 'int' })
   roleId: number;
 
