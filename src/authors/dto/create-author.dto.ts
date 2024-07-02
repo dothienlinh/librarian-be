@@ -7,5 +7,5 @@ export class CreateAuthorDto {
 
   @IsNotEmpty()
   @IsDateString()
-  birthdate: string;
+  birthdate: Date;
 }

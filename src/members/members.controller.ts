@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { MembersService } from './members.service';
 import { CreateMemberDto } from './dto/create-member.dto';
@@ -25,6 +26,12 @@ export class MembersController {
     return this.membersService.getTrash();
   }
 
+  @Get('all')
+  @ApiOperation({ summary: 'Get all members' })
+  findAllCategories() {
+    return this.membersService.getAllMembers();
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create a new member' })
   @ResponseMessage('Create a new member successfully!')
@@ -34,8 +41,8 @@ export class MembersController {
 
   @Get()
   @ApiOperation({ summary: 'Get members' })
-  findAll() {
-    return this.membersService.findAll();
+  findAll(@Query('page') page: number = 1, @Query('name') name: string = '') {
+    return this.membersService.findAll(page, name);
   }
 
   @Get(':id')

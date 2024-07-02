@@ -42,6 +42,15 @@ export class AdminsService {
     return plainToInstance(Admin, await this.adminRepository.save(admin));
   }
 
+  async createsMultipleAdmin(createAdminDtos: CreateAdminDto[]) {
+    return this.adminRepository
+      .createQueryBuilder()
+      .insert()
+      .into(Admin)
+      .values(createAdminDtos)
+      .execute();
+  }
+
   async findAll() {
     const admins = await this.adminRepository
       .createQueryBuilder('admin')
@@ -52,7 +61,11 @@ export class AdminsService {
   }
 
   async findOne(id: number) {
-    const admin = await this.adminRepository.findOneBy({ id });
+    const admin = await this.adminRepository
+      .createQueryBuilder('admin')
+      .leftJoinAndSelect('admin.role', 'role')
+      .where('admin.id = :id', { id })
+      .getOne();
 
     return plainToInstance(Admin, admin);
   }
@@ -115,6 +128,21 @@ export class AdminsService {
   };
 
   findByRefreshToken = async (refreshToken: string) => {
-    return this.adminRepository.findOneBy({ refreshToken });
+    const admin = await this.adminRepository
+      .createQueryBuilder('admin')
+      .leftJoinAndSelect('admin.role', 'role')
+      .where('admin.refresh_token = :refreshToken', { refreshToken })
+      .getOne();
+
+    return plainToInstance(Admin, admin);
+  };
+
+  deleteAllNormalAdmin = async () => {
+    return await this.adminRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Admin)
+      .where('role_id = :RoleId', { RoleId: RoleId.NORMAL_ADMIN })
+      .execute();
   };
 }

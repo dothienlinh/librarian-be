@@ -8,7 +8,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('books')
@@ -42,7 +42,7 @@ export class Book extends BaseEntity {
   })
   authors: Author[];
 
-  @ManyToOne(() => Borrowing, (borrowing) => borrowing.books)
+  @OneToMany(() => Borrowing, (borrowing) => borrowing.book)
   @JoinColumn({ name: 'borrowing_id' })
   borrowing: Borrowing;
 
