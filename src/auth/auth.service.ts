@@ -68,7 +68,7 @@ export class AuthService {
       const admin = await this.adminsService.findByRefreshToken(refreshToken);
 
       if (!admin) {
-        throw new BadRequestException('admin not found');
+        throw new BadRequestException('Admin not found');
       }
 
       const payload: IPayload = {

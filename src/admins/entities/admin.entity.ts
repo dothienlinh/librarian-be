@@ -17,7 +17,7 @@ export class Admin extends BaseEntity {
   email: string;
 
   @Exclude()
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: true, name: 'refresh_token' })
   refreshToken: string;
 
   @Exclude()

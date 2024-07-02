@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  Put,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -24,6 +26,18 @@ export class CategoriesController {
     return this.categoriesService.getTrash();
   }
 
+  @Get('names')
+  @ApiOperation({ summary: 'Get category by name' })
+  findByName(@Query('name') name: string) {
+    return this.categoriesService.findByName(name);
+  }
+
+  @Get('all')
+  @ApiOperation({ summary: 'Get all categories' })
+  findAllCategories() {
+    return this.categoriesService.findAllCategories();
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create a new category' })
   @ResponseMessage('Create a new category successfully!')
@@ -33,8 +47,8 @@ export class CategoriesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all category' })
-  findAll() {
-    return this.categoriesService.findAll();
+  findAll(@Query('page') page: number = 1, @Query('name') name: string = '') {
+    return this.categoriesService.findAll(page, name);
   }
 
   @Get(':id')
@@ -43,7 +57,7 @@ export class CategoriesController {
     return this.categoriesService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Update category by id' })
   @ResponseMessage('Update an category successfully')
   update(

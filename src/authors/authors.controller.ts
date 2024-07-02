@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
@@ -25,10 +26,22 @@ export class AuthorsController {
     return this.authorsService.getTrash();
   }
 
+  @Get('names')
+  @ApiOperation({ summary: 'Get category by name' })
+  findByName(@Query('name') name: string) {
+    return this.authorsService.findByName(name);
+  }
+
+  @Get('all')
+  @ApiOperation({ summary: 'Get all categories' })
+  findAllCategories() {
+    return this.authorsService.findAllAuthors();
+  }
+
   @Get()
   @ApiOperation({ summary: 'Get authors' })
-  findAll() {
-    return this.authorsService.findAll();
+  findAll(@Query('page') page: number = 1, @Query('name') name: string = '') {
+    return this.authorsService.findAll(page, name);
   }
 
   @Get(':id')

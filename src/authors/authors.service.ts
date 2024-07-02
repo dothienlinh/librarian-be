@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { Author } from './entities/author.entity';
-import { IsNull, Not, Repository } from 'typeorm';
+import { IsNull, Like, Not, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 
@@ -22,10 +22,17 @@ export class AuthorsService {
     );
   }
 
-  async findAll() {
-    const authors = await this.authorRepository.find();
+  async findAll(page: number, name: string) {
+    const [author, total] = await this.authorRepository.findAndCount({
+      where: { name: Like(`%${name}%`) },
+      take: 10,
+      skip: (page - 1) * 10,
+    });
 
-    return plainToInstance(Author, authors);
+    return {
+      authors: plainToInstance(Author, author),
+      total,
+    };
   }
 
   async findOne(id: number) {
@@ -54,5 +61,34 @@ export class AuthorsService {
 
   restore = async (id: number) => {
     return await this.authorRepository.restore(id);
+  };
+
+  findByName = async (name: string) => {
+    const authors = await this.authorRepository.find({
+      where: { name: Like(`%${name}%`) },
+    });
+
+    return plainToInstance(Author, authors);
+  };
+
+  findAllAuthors = async () => {
+    return plainToInstance(Author, await this.authorRepository.find());
+  };
+
+  deleteAll = async () => {
+    return await this.authorRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Author)
+      .execute();
+  };
+
+  createsMultipleMember = async (createAuthorDto: CreateAuthorDto[]) => {
+    return await this.authorRepository
+      .createQueryBuilder()
+      .insert()
+      .into(Author)
+      .values(createAuthorDto)
+      .execute();
   };
 }

@@ -11,5 +11,6 @@ import { Category } from 'src/categories/entities/category.entity';
   imports: [TypeOrmModule.forFeature([Book, Author, Category]), AuthorsModule],
   controllers: [BooksController],
   providers: [BooksService],
+  exports: [BooksService],
 })
 export class BooksModule {}

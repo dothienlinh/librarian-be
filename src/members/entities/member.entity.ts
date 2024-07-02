@@ -4,13 +4,13 @@ import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('members')
 export class Member extends BaseEntity {
-  @Column({ type: 'int', name: 'student_id' })
+  @Column({ type: 'int', name: 'student_id', unique: true })
   studentId: number;
 
   @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   address: string;
 
   @Column({ type: 'varchar', length: 10 })
@@ -19,7 +19,7 @@ export class Member extends BaseEntity {
   @Column({ type: 'varchar', nullable: true })
   email: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', name: 'membership_date' })
   membershipDate: Date;
 
   @OneToMany(() => Borrowing, (borrowing) => borrowing.member)

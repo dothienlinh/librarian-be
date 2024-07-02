@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
+  Query,
 } from '@nestjs/common';
 import { BorrowingService } from './borrowing.service';
 import { CreateBorrowingDto } from './dto/create-borrowing.dto';
@@ -33,8 +35,12 @@ export class BorrowingController {
 
   @Get()
   @ApiOperation({ summary: 'Get borrows' })
-  findAll() {
-    return this.borrowingService.findAll();
+  findAll(
+    @Query('page') page: number = 1,
+    @Query('memberName') memberName: string = '',
+    @Query('bookName') bookName: string = '',
+  ) {
+    return this.borrowingService.findAll(page, memberName, bookName);
   }
 
   @Get(':id')
@@ -43,7 +49,7 @@ export class BorrowingController {
     return this.borrowingService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Update borrow by id' })
   @ResponseMessage('Update an borrow successfully')
   update(
@@ -65,5 +71,12 @@ export class BorrowingController {
   @ResponseMessage('Restore an borrow successfully!')
   restore(@Param('id') id: number) {
     return this.borrowingService.restore(+id);
+  }
+
+  @Patch('/give-book-back/:id')
+  @ApiOperation({ summary: 'Return books by id' })
+  @ResponseMessage('The book has been returned!')
+  bookRolls(@Param('id') id: number) {
+    return this.borrowingService.giveBookBack(+id);
   }
 }
