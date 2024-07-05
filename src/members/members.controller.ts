@@ -32,6 +32,12 @@ export class MembersController {
     return this.membersService.getAllMembers();
   }
 
+  @Get('count')
+  @ApiOperation({ summary: 'Get count of authors' })
+  getCount() {
+    return this.membersService.getCount();
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create a new member' })
   @ResponseMessage('Create a new member successfully!')

@@ -38,6 +38,12 @@ export class CategoriesController {
     return this.categoriesService.findAllCategories();
   }
 
+  @Get('count')
+  @ApiOperation({ summary: 'Get count of authors' })
+  getCount() {
+    return this.categoriesService.getCount();
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create a new category' })
   @ResponseMessage('Create a new category successfully!')

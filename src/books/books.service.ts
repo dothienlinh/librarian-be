@@ -150,4 +150,10 @@ export class BooksService {
       }),
     );
   };
+
+  getCount = async () => {
+    return {
+      count: await this.bookRepository.count(),
+    };
+  };
 }

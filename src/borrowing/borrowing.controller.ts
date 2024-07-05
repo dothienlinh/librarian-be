@@ -12,8 +12,9 @@ import {
 import { BorrowingService } from './borrowing.service';
 import { CreateBorrowingDto } from './dto/create-borrowing.dto';
 import { UpdateBorrowingDto } from './dto/update-borrowing.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ResponseMessage } from 'src/common/decorators/responseMessage.decorator';
+import { StatusBorrowing } from 'src/common/enums/statusBorrowing';
 
 @ApiTags('Borrowing')
 @Controller('borrowing')
@@ -35,12 +36,26 @@ export class BorrowingController {
 
   @Get()
   @ApiOperation({ summary: 'Get borrows' })
+  @ApiQuery({
+    name: 'memberName',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'bookName',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: StatusBorrowing,
+  })
   findAll(
     @Query('page') page: number = 1,
     @Query('memberName') memberName: string = '',
     @Query('bookName') bookName: string = '',
+    @Query('status') status: StatusBorrowing,
   ) {
-    return this.borrowingService.findAll(page, memberName, bookName);
+    return this.borrowingService.findAll(page, memberName, bookName, status);
   }
 
   @Get(':id')

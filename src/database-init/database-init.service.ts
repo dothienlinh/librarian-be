@@ -28,13 +28,25 @@ export class DatabaseInitService implements OnModuleInit {
     private readonly booksService: BooksService,
   ) {}
   async onModuleInit() {
-    await this.ensureRolesExist();
-    await this.ensureSuperAdminsExist();
-    await this.ensureNormalAdminsExist();
-    await this.ensureMemberExist();
-    await this.ensureAuthorExist();
-    await this.ensureCategoryExist();
-    await this.ensureBooksExist();
+    if (!(await this.isExistAdmin())) {
+      await this.ensureRolesExist();
+      await this.ensureSuperAdminsExist();
+      await this.ensureNormalAdminsExist();
+      await this.ensureMemberExist();
+      await this.ensureAuthorExist();
+      await this.ensureCategoryExist();
+      await this.ensureBooksExist();
+    }
+  }
+
+  async isExistAdmin() {
+    const countAdmin = await this.adminsService.countAdmin();
+
+    if (countAdmin) {
+      return true;
+    }
+
+    return false;
   }
 
   async ensureRolesExist() {

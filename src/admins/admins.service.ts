@@ -145,4 +145,8 @@ export class AdminsService {
       .where('role_id = :RoleId', { RoleId: RoleId.NORMAL_ADMIN })
       .execute();
   };
+
+  countAdmin = async () => {
+    return await this.adminRepository.count();
+  };
 }

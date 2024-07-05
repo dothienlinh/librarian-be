@@ -91,4 +91,10 @@ export class CategoriesService {
       .values(createCategoryDto)
       .execute();
   };
+
+  getCount = async () => {
+    return {
+      count: await this.categoriesRepository.count(),
+    };
+  };
 }

@@ -38,6 +38,12 @@ export class AuthorsController {
     return this.authorsService.findAllAuthors();
   }
 
+  @Get('count')
+  @ApiOperation({ summary: 'Get count of authors' })
+  getCount() {
+    return this.authorsService.getCount();
+  }
+
   @Get()
   @ApiOperation({ summary: 'Get authors' })
   findAll(@Query('page') page: number = 1, @Query('name') name: string = '') {
