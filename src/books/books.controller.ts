@@ -32,6 +32,12 @@ export class BooksController {
     return this.booksService.getAllBooks();
   }
 
+  @Get('count')
+  @ApiOperation({ summary: 'Get count of authors' })
+  getCount() {
+    return this.booksService.getCount();
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create a new book' })
   @ResponseMessage('Create a new book successfully!')

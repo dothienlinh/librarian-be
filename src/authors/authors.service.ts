@@ -91,4 +91,10 @@ export class AuthorsService {
       .values(createAuthorDto)
       .execute();
   };
+
+  getCount = async () => {
+    return {
+      count: await this.authorRepository.count(),
+    };
+  };
 }

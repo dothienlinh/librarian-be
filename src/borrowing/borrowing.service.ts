@@ -25,15 +25,26 @@ export class BorrowingService {
     );
   }
 
-  async findAll(page: number, memberName: string, bookTitle: string) {
-    const [borrowings, totalRecords] = await this.borrowingRepository
+  async findAll(
+    page: number,
+    memberName: string,
+    bookTitle: string,
+    status: StatusBorrowing,
+  ) {
+    const query = this.borrowingRepository
       .createQueryBuilder('borrowing')
       .leftJoinAndSelect('borrowing.member', 'member')
       .leftJoinAndSelect('borrowing.book', 'book')
       .leftJoinAndSelect('book.authors', 'authors')
       .leftJoinAndSelect('book.categories', 'categories')
       .where('member.name LIKE :memberName', { memberName: `%${memberName}%` })
-      .andWhere('book.title LIKE :bookTitle', { bookTitle: `%${bookTitle}%` })
+      .andWhere('book.title LIKE :bookTitle', { bookTitle: `%${bookTitle}%` });
+
+    if (status) {
+      query.andWhere('borrowing.status = :status', { status });
+    }
+
+    const [borrowings, totalRecords] = await query
       .take(10)
       .skip((page - 1) * 10)
       .getManyAndCount();
@@ -43,7 +54,6 @@ export class BorrowingService {
       total: totalRecords,
     };
   }
-
   async findOne(id: number) {
     return plainToInstance(
       Borrowing,

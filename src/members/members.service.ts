@@ -78,4 +78,10 @@ export class MembersService {
   getAllMembers = async () => {
     return plainToInstance(Member, await this.memberRepository.find());
   };
+
+  getCount = async () => {
+    return {
+      count: await this.memberRepository.count(),
+    };
+  };
 }
