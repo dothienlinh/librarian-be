@@ -3,7 +3,7 @@ import { CreateBorrowingDto } from './dto/create-borrowing.dto';
 import { UpdateBorrowingDto } from './dto/update-borrowing.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Borrowing } from './entities/borrowing.entity';
-import { IsNull, Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { StatusBorrowing } from 'src/common/enums/statusBorrowing';
 
@@ -75,20 +75,6 @@ export class BorrowingService {
   remove(id: number) {
     return this.borrowingRepository.softDelete({ id });
   }
-
-  getTrash = async () => {
-    return plainToInstance(
-      Borrowing,
-      await this.borrowingRepository.find({
-        withDeleted: true,
-        where: { deletedAt: Not(IsNull()) },
-      }),
-    );
-  };
-
-  restore = async (id: number) => {
-    return await this.borrowingRepository.restore(id);
-  };
 
   giveBookBack = async (id: number) => {
     return await this.borrowingRepository.update(

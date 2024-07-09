@@ -64,8 +64,15 @@ export class BooksController {
     return this.booksService.update(+id, updateBookDto);
   }
 
+  @Delete('delete/:id')
+  @ApiOperation({ summary: 'Delete from trash' })
+  @ResponseMessage('Delete an book successfully')
+  permanentlyDeleted(@Param('id') id: string) {
+    return this.booksService.delete(+id);
+  }
+
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete book by id' })
+  @ApiOperation({ summary: 'Put in trash' })
   @ResponseMessage('Delete a book successfully')
   remove(@Param('id') id: string) {
     return this.booksService.remove(+id);

@@ -89,17 +89,35 @@ export class AdminsService {
   }
 
   getTrash = async () => {
-    return plainToInstance(
-      Admin,
-      await this.adminRepository.find({
-        withDeleted: true,
-        where: { deletedAt: Not(IsNull()) },
-      }),
-    );
+    const [trash, total] = await this.adminRepository.findAndCount({
+      withDeleted: true,
+      where: { deletedAt: Not(IsNull()) },
+    });
+
+    return {
+      trash: plainToInstance(Admin, trash),
+      total,
+    };
   };
 
   restore = async (id: number) => {
     return await this.adminRepository.restore(id);
+  };
+
+  delete = async (id: number) => {
+    const idSoftDelete = await this.adminRepository.findOne({
+      where: {
+        id,
+        deletedAt: Not(IsNull()),
+      },
+      withDeleted: true,
+    });
+
+    if (!idSoftDelete) {
+      throw new BadRequestException('Admin cannot delete!');
+    }
+
+    return await this.adminRepository.delete({ id });
   };
 
   hashPassword = async (password: string): Promise<string> => {

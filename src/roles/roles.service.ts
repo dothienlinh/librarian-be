@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -40,16 +40,34 @@ export class RolesService {
   }
 
   getTrash = async () => {
-    return plainToInstance(
-      Role,
-      await this.roleRepository.find({
-        withDeleted: true,
-        where: { deletedAt: Not(IsNull()) },
-      }),
-    );
+    const [trash, total] = await this.roleRepository.findAndCount({
+      withDeleted: true,
+      where: { deletedAt: Not(IsNull()) },
+    });
+
+    return {
+      trash: plainToInstance(Role, trash),
+      total,
+    };
   };
 
   restore = async (id: number) => {
     return await this.roleRepository.restore(id);
+  };
+
+  delete = async (id: number) => {
+    const idSoftDelete = await this.roleRepository.findOne({
+      where: {
+        id,
+        deletedAt: Not(IsNull()),
+      },
+      withDeleted: true,
+    });
+
+    if (!idSoftDelete) {
+      throw new BadRequestException('Role cannot delete!');
+    }
+
+    return await this.roleRepository.delete({ id });
   };
 }

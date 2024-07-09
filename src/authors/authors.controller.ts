@@ -78,9 +78,16 @@ export class AuthorsController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete author by id' })
+  @ApiOperation({ summary: 'Put in trash' })
   @ResponseMessage('Delete an authors successfully!')
   remove(@Param('id') id: string) {
     return this.authorsService.remove(+id);
+  }
+
+  @Delete('delete/:id')
+  @ApiOperation({ summary: 'Delete from trash' })
+  @ResponseMessage('Delete an author successfully')
+  permanentlyDeleted(@Param('id') id: string) {
+    return this.authorsService.delete(+id);
   }
 }

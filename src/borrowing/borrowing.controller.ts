@@ -21,12 +21,6 @@ import { StatusBorrowing } from 'src/common/enums/statusBorrowing';
 export class BorrowingController {
   constructor(private readonly borrowingService: BorrowingService) {}
 
-  @Get('/trash')
-  @ApiOperation({ summary: 'Get trash borrow' })
-  getTrash() {
-    return this.borrowingService.getTrash();
-  }
-
   @Post()
   @ApiOperation({ summary: 'Create new borrow' })
   @ResponseMessage('Create new borrow successfully!')
@@ -79,13 +73,6 @@ export class BorrowingController {
   @ResponseMessage('Delete an borrow successfully')
   remove(@Param('id') id: string) {
     return this.borrowingService.remove(+id);
-  }
-
-  @Patch('/restore/:id')
-  @ApiOperation({ summary: 'Restore book by id' })
-  @ResponseMessage('Restore an borrow successfully!')
-  restore(@Param('id') id: number) {
-    return this.borrowingService.restore(+id);
   }
 
   @Patch('/give-book-back/:id')
