@@ -13,7 +13,7 @@ export class Admin extends BaseEntity {
   @Exclude()
   password: string;
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'varchar' })
   email: string;
 
   @Exclude()

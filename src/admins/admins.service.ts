@@ -26,10 +26,15 @@ export class AdminsService {
       throw new BadRequestException('You can not create more than 5 admins!');
     }
 
-    const isExist = await this.adminRepository.findOneBy({ email: rest.email });
+    const isExist = await this.adminRepository.findOne({
+      where: { email: rest.email },
+      withDeleted: true,
+    });
 
     if (isExist) {
-      throw new BadRequestException('Admin already exists!');
+      throw new BadRequestException(
+        'The administrator already exists or is in the trash!',
+      );
     }
 
     const hashPassword = await this.hashPassword(password);
@@ -101,6 +106,14 @@ export class AdminsService {
   };
 
   restore = async (id: number) => {
+    const maxAdmin = await this.adminRepository.count();
+
+    if (maxAdmin > 5) {
+      throw new BadRequestException(
+        '5 admins have reached and cannot be restored!',
+      );
+    }
+
     return await this.adminRepository.restore(id);
   };
 
