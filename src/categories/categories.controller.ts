@@ -73,9 +73,16 @@ export class CategoriesController {
     return this.categoriesService.update(+id, updateCategoryDto);
   }
 
+  @Delete('delete/:id')
+  @ApiOperation({ summary: 'Delete from trash' })
+  @ResponseMessage('Delete an category successfully')
+  permanentlyDeleted(@Param('id') id: string) {
+    return this.categoriesService.delete(+id);
+  }
+
   @Delete(':id')
   @ResponseMessage('Delete an category successfully')
-  @ApiOperation({ summary: 'Delete category by id' })
+  @ApiOperation({ summary: 'Put in trash' })
   remove(@Param('id') id: string) {
     return this.categoriesService.remove(+id);
   }

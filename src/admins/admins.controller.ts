@@ -54,10 +54,17 @@ export class AdminsController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete admin by id' })
+  @ApiOperation({ summary: 'Put in trash' })
   @ResponseMessage('Delete an admin successfully')
   remove(@Param('id') id: string) {
     return this.adminsService.remove(+id);
+  }
+
+  @Delete('delete/:id')
+  @ApiOperation({ summary: 'Delete from trash' })
+  @ResponseMessage('Delete an admin successfully')
+  permanentlyDeleted(@Param('id') id: string) {
+    return this.adminsService.delete(+id);
   }
 
   @Patch('/restore/:id')

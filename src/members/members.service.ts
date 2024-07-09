@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -45,17 +45,35 @@ export class MembersService {
   }
 
   getTrash = async () => {
-    return plainToInstance(
-      Member,
-      await this.memberRepository.find({
-        withDeleted: true,
-        where: { deletedAt: Not(IsNull()) },
-      }),
-    );
+    const [trash, total] = await this.memberRepository.findAndCount({
+      withDeleted: true,
+      where: { deletedAt: Not(IsNull()) },
+    });
+
+    return {
+      trash: plainToInstance(Member, trash),
+      total,
+    };
   };
 
   restore = async (id: number) => {
     return await this.memberRepository.restore(id);
+  };
+
+  delete = async (id: number) => {
+    const idSoftDelete = await this.memberRepository.findOne({
+      where: {
+        id,
+        deletedAt: Not(IsNull()),
+      },
+      withDeleted: true,
+    });
+
+    if (!idSoftDelete) {
+      throw new BadRequestException('Member cannot delete!');
+    }
+
+    return await this.memberRepository.delete({ id });
   };
 
   deleteAll = async () => {

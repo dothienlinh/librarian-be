@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -97,17 +101,35 @@ export class BooksService {
   }
 
   getTrash = async () => {
-    return plainToInstance(
-      Book,
-      await this.bookRepository.find({
-        withDeleted: true,
-        where: { deletedAt: Not(IsNull()) },
-      }),
-    );
+    const [trash, total] = await this.bookRepository.findAndCount({
+      withDeleted: true,
+      where: { deletedAt: Not(IsNull()) },
+    });
+
+    return {
+      trash: plainToInstance(Book, trash),
+      total,
+    };
   };
 
   restore = async (id: number) => {
     return await this.bookRepository.restore(id);
+  };
+
+  delete = async (id: number) => {
+    const idSoftDelete = await this.bookRepository.findOne({
+      where: {
+        id,
+        deletedAt: Not(IsNull()),
+      },
+      withDeleted: true,
+    });
+
+    if (!idSoftDelete) {
+      throw new BadRequestException('Book cannot delete!');
+    }
+
+    return await this.bookRepository.delete({ id });
   };
 
   deleteAll = async () => {

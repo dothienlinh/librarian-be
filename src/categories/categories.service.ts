@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -50,17 +50,35 @@ export class CategoriesService {
   }
 
   getTrash = async () => {
-    return plainToInstance(
-      Category,
-      await this.categoriesRepository.find({
-        withDeleted: true,
-        where: { deletedAt: Not(IsNull()) },
-      }),
-    );
+    const [trash, total] = await this.categoriesRepository.findAndCount({
+      withDeleted: true,
+      where: { deletedAt: Not(IsNull()) },
+    });
+
+    return {
+      trash: plainToInstance(Category, trash),
+      total,
+    };
   };
 
   restore = async (id: number) => {
     return await this.categoriesRepository.restore(id);
+  };
+
+  delete = async (id: number) => {
+    const idSoftDelete = await this.categoriesRepository.findOne({
+      where: {
+        id,
+        deletedAt: Not(IsNull()),
+      },
+      withDeleted: true,
+    });
+
+    if (!idSoftDelete) {
+      throw new BadRequestException('Category cannot delete!');
+    }
+
+    return await this.categoriesRepository.delete({ id });
   };
 
   findByName = async (name: string) => {

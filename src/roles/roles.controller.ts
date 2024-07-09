@@ -53,8 +53,15 @@ export class RolesController {
     return this.rolesService.update(+id, updateRoleDto);
   }
 
+  @Delete('delete/:id')
+  @ApiOperation({ summary: 'Delete from trash' })
+  @ResponseMessage('Delete an role successfully')
+  permanentlyDeleted(@Param('id') id: string) {
+    return this.rolesService.delete(+id);
+  }
+
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete role by id' })
+  @ApiOperation({ summary: 'Put in trash' })
   @ResponseMessage('Delete an role successfully')
   remove(@Param('id') id: string) {
     return this.rolesService.remove(+id);

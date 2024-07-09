@@ -64,8 +64,15 @@ export class MembersController {
     return this.membersService.update(+id, updateMemberDto);
   }
 
+  @Delete('delete/:id')
+  @ApiOperation({ summary: 'Delete from trash' })
+  @ResponseMessage('Delete an member successfully')
+  permanentlyDeleted(@Param('id') id: string) {
+    return this.membersService.delete(+id);
+  }
+
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete member by id' })
+  @ApiOperation({ summary: 'Put in trash' })
   @ResponseMessage('Delete an member successfully')
   remove(@Param('id') id: string) {
     return this.membersService.remove(+id);

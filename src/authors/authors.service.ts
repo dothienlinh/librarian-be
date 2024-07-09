@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { Author } from './entities/author.entity';
@@ -50,17 +50,35 @@ export class AuthorsService {
   }
 
   getTrash = async () => {
-    return plainToInstance(
-      Author,
-      await this.authorRepository.find({
-        withDeleted: true,
-        where: { deletedAt: Not(IsNull()) },
-      }),
-    );
+    const [trash, total] = await this.authorRepository.findAndCount({
+      withDeleted: true,
+      where: { deletedAt: Not(IsNull()) },
+    });
+
+    return {
+      trash: plainToInstance(Author, trash),
+      total,
+    };
   };
 
   restore = async (id: number) => {
     return await this.authorRepository.restore(id);
+  };
+
+  delete = async (id: number) => {
+    const idSoftDelete = await this.authorRepository.findOne({
+      where: {
+        id,
+        deletedAt: Not(IsNull()),
+      },
+      withDeleted: true,
+    });
+
+    if (!idSoftDelete) {
+      throw new BadRequestException('Author cannot delete!');
+    }
+
+    return await this.authorRepository.delete({ id });
   };
 
   findByName = async (name: string) => {
