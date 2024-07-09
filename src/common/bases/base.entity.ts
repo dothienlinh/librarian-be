@@ -23,7 +23,7 @@ export abstract class BaseEntity extends BaseEntityTypeOrm {
   })
   public updatedAt: Date;
 
-  @Expose({ groups: ['trash'] })
+  @Expose({ groups: ['trash'], name: 'deleted_at' })
   @DeleteDateColumn({
     name: 'deleted_at',
   })
