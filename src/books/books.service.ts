@@ -8,7 +8,7 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
 import { In, IsNull, Like, Not, Repository } from 'typeorm';
-import { plainToInstance } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { Category } from 'src/categories/entities/category.entity';
 import { Author } from 'src/authors/entities/author.entity';
 
@@ -107,7 +107,7 @@ export class BooksService {
     });
 
     return {
-      trash: plainToInstance(Book, trash),
+      trash: instanceToPlain(trash, { groups: ['trash'] }),
       total,
     };
   };

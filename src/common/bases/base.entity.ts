@@ -1,4 +1,4 @@
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
@@ -23,7 +23,7 @@ export abstract class BaseEntity extends BaseEntityTypeOrm {
   })
   public updatedAt: Date;
 
-  @Exclude()
+  @Expose({ groups: ['trash'] })
   @DeleteDateColumn({
     name: 'deleted_at',
   })

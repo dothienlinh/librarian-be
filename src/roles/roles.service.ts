@@ -4,7 +4,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Not, Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
-import { plainToInstance } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class RolesService {
@@ -46,7 +46,7 @@ export class RolesService {
     });
 
     return {
-      trash: plainToInstance(Role, trash),
+      trash: instanceToPlain(trash, { groups: ['trash'] }),
       total,
     };
   };
