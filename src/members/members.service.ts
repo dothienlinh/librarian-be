@@ -4,7 +4,7 @@ import { UpdateMemberDto } from './dto/update-member.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Member } from './entities/member.entity';
 import { IsNull, Like, Not, Repository } from 'typeorm';
-import { plainToInstance } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class MembersService {
@@ -51,7 +51,7 @@ export class MembersService {
     });
 
     return {
-      trash: plainToInstance(Member, trash),
+      trash: instanceToPlain(trash, { groups: ['trash'] }),
       total,
     };
   };

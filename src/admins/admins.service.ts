@@ -4,7 +4,7 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Admin } from './entities/admin.entity';
 import { IsNull, Not, Repository } from 'typeorm';
-import { plainToInstance } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 import { RoleId } from 'src/common/enums/rolse';
 
@@ -95,7 +95,7 @@ export class AdminsService {
     });
 
     return {
-      trash: plainToInstance(Admin, trash),
+      trash: instanceToPlain(trash, { groups: ['trash'] }),
       total,
     };
   };

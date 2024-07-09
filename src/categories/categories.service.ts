@@ -4,7 +4,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Like, Not, Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
-import { plainToInstance } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class CategoriesService {
@@ -56,7 +56,7 @@ export class CategoriesService {
     });
 
     return {
-      trash: plainToInstance(Category, trash),
+      trash: instanceToPlain(trash, { groups: ['trash'] }),
       total,
     };
   };

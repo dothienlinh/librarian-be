@@ -4,7 +4,7 @@ import { UpdateAuthorDto } from './dto/update-author.dto';
 import { Author } from './entities/author.entity';
 import { IsNull, Like, Not, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { plainToInstance } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class AuthorsService {
@@ -56,7 +56,7 @@ export class AuthorsService {
     });
 
     return {
-      trash: plainToInstance(Author, trash),
+      trash: instanceToPlain(trash, { groups: ['trash'] }),
       total,
     };
   };
