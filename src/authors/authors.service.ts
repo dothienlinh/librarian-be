@@ -53,6 +53,7 @@ export class AuthorsService {
     const [trash, total] = await this.authorRepository.findAndCount({
       withDeleted: true,
       where: { deletedAt: Not(IsNull()) },
+      order: { deletedAt: 'DESC' },
     });
 
     return {

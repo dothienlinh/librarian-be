@@ -53,6 +53,7 @@ export class CategoriesService {
     const [trash, total] = await this.categoriesRepository.findAndCount({
       withDeleted: true,
       where: { deletedAt: Not(IsNull()) },
+      order: { deletedAt: 'DESC' },
     });
 
     return {

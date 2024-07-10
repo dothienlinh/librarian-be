@@ -104,6 +104,7 @@ export class BooksService {
     const [trash, total] = await this.bookRepository.findAndCount({
       withDeleted: true,
       where: { deletedAt: Not(IsNull()) },
+      order: { deletedAt: 'DESC' },
     });
 
     return {

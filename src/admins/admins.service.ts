@@ -97,6 +97,7 @@ export class AdminsService {
     const [trash, total] = await this.adminRepository.findAndCount({
       withDeleted: true,
       where: { deletedAt: Not(IsNull()) },
+      order: { deletedAt: 'DESC' },
     });
 
     return {

@@ -48,6 +48,7 @@ export class MembersService {
     const [trash, total] = await this.memberRepository.findAndCount({
       withDeleted: true,
       where: { deletedAt: Not(IsNull()) },
+      order: { deletedAt: 'DESC' },
     });
 
     return {

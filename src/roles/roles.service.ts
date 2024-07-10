@@ -43,6 +43,7 @@ export class RolesService {
     const [trash, total] = await this.roleRepository.findAndCount({
       withDeleted: true,
       where: { deletedAt: Not(IsNull()) },
+      order: { deletedAt: 'DESC' },
     });
 
     return {
