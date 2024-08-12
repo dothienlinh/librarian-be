@@ -43,7 +43,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const port = configService.get<string>('LOCAL_PORT');
+  const port = configService.getOrThrow<string>('LOCAL_PORT');
   await app.listen(port);
 }
 bootstrap();

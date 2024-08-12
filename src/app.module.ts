@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthorsModule } from './authors/authors.module';
@@ -16,21 +14,26 @@ import { BorrowingModule } from './borrowing/borrowing.module';
 import { CategoriesModule } from './categories/categories.module';
 import { RolesGuard } from './common/guards/roles.guard';
 import { DatabaseInitModule } from './database-init/database-init.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}.local`,
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
-        host: configService.get('MYSQL_HOST'),
-        port: +configService.get('MYSQL_PORT'),
-        username: configService.get('MYSQL_USER'),
-        password: configService.get('MYSQL_PASSWORD'),
-        database: configService.get('MYSQL_DATABASE'),
+        host: configService.getOrThrow('MYSQL_HOST'),
+        port: +configService.getOrThrow('MYSQL_PORT'),
+        username: configService.getOrThrow('MYSQL_USER'),
+        password: configService.getOrThrow('MYSQL_PASSWORD'),
+        database: configService.getOrThrow('MYSQL_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: configService.get<string>('MYSQL_SYNCHRONIZE') === 'true',
+        synchronize:
+          configService.getOrThrow<string>('MYSQL_SYNCHRONIZE') === 'true',
         autoLoadEntities: true,
       }),
       inject: [ConfigService],
@@ -44,10 +47,9 @@ import { DatabaseInitModule } from './database-init/database-init.module';
     BorrowingModule,
     CategoriesModule,
     DatabaseInitModule,
+    ChatModule,
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,

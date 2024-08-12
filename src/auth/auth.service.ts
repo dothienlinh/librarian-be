@@ -44,7 +44,7 @@ export class AuthService {
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRES')),
+      maxAge: ms(this.configService.getOrThrow<string>('JWT_REFRESH_EXPIRES')),
     });
 
     const [accessToken] = await Promise.all([
@@ -62,7 +62,9 @@ export class AuthService {
   refreshToken = async (refreshToken: string) => {
     try {
       await this.jwtService.verifyAsync(refreshToken, {
-        secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
+        secret: this.configService.getOrThrow<string>(
+          'JWT_REFRESH_TOKEN_SECRET',
+        ),
       });
 
       const admin = await this.adminsService.findByRefreshToken(refreshToken);
@@ -90,8 +92,8 @@ export class AuthService {
 
   createRefreshToken = async (payload: IPayload) => {
     return await this.jwtService.signAsync(payload, {
-      secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
-      expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRES'),
+      secret: this.configService.getOrThrow<string>('JWT_REFRESH_TOKEN_SECRET'),
+      expiresIn: this.configService.getOrThrow<string>('JWT_REFRESH_EXPIRES'),
     });
   };
 
