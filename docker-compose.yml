@@ -4,11 +4,13 @@ services:
     image: mysql:8.0
     container_name: library-db
     restart: always
+    env_file:
+      - ./.env
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: library
-      MYSQL_USER: library
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
     ports:
       - 33061:3306
     networks:
@@ -25,7 +27,7 @@ services:
     user: "${UID}:${GID}"
     restart: always
     env_file:
-      - .env
+      - ./.env
     ports:
       - "8000:8000"
     networks:

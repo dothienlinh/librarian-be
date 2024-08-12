@@ -6,18 +6,30 @@ import { Borrowing } from './entities/borrowing.entity';
 import { Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { StatusBorrowing } from 'src/common/enums/statusBorrowing';
+import { Book } from 'src/books/entities/book.entity';
 
 @Injectable()
 export class BorrowingService {
   constructor(
     @InjectRepository(Borrowing)
     private readonly borrowingRepository: Repository<Borrowing>,
+
+    @InjectRepository(Book)
+    private readonly bookRepository: Repository<Book>,
   ) {}
   async create(createBorrowingDto: CreateBorrowingDto) {
-    const borrowing = this.borrowingRepository.create({
-      ...createBorrowingDto,
-      status: StatusBorrowing.BORROW,
-    });
+    const [borrowing] = await Promise.all([
+      this.borrowingRepository.create({
+        ...createBorrowingDto,
+        status: StatusBorrowing.BORROW,
+      }),
+      this.bookRepository.update(
+        { id: createBorrowingDto.bookId },
+        {
+          status: StatusBorrowing.BORROW,
+        },
+      ),
+    ]);
 
     return plainToInstance(
       Borrowing,

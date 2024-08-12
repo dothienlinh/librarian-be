@@ -2,6 +2,7 @@ import { Author } from 'src/authors/entities/author.entity';
 import { Borrowing } from 'src/borrowing/entities/borrowing.entity';
 import { Category } from 'src/categories/entities/category.entity';
 import { BaseEntity } from 'src/common/bases/base.entity';
+import { StatusBorrowing } from 'src/common/enums/statusBorrowing';
 import {
   Column,
   Entity,
@@ -27,6 +28,13 @@ export class Book extends BaseEntity {
 
   @Column({ type: 'int', nullable: true })
   copies: number;
+
+  @Column({
+    type: 'enum',
+    enum: StatusBorrowing,
+    default: StatusBorrowing.RETURN,
+  })
+  status: number;
 
   @ManyToMany(() => Author, { cascade: true })
   @JoinTable({
